@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPER DUPER SICK BLACKJACK</title>
+    <link rel="stylesheet" href="style.css">
+    <h1 id = "blackjackTitle">BLACKJACK</h1>
+    
+</head>
+<body>
+    <button id = "shuffle"> shuffle</button>
+    
+    <script src="script.js" defer></script>
+
+    <div class = "hands">
+        <section class = "hand">
+        <p id = "cardTotal">0</p>
+        <p id = "player">Player Deck</p>
+        <div id = "player-deck"></div>
+        </section>
+
+
+        <section class = "hand">
+        <p id ="dealerTotal">0</p>
+        <p id = "dealer"> Dealer Deck</p>
+        <div id = "dealer-deck"></div>
+        </section>
+    </div>
+    <div class = "HitOrFold">
+        <button id = "fold">Fold</button>
+        <button id = "hit">Hit</button>
+    </div>
+    
+</body>
+</html>
