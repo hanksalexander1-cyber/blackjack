@@ -4,6 +4,8 @@ let suits = ["spades", "diamonds", "clubs", "hearts"]
 
 let ranks = [1,2,3,4,5,6,7,8,9,10,11,12,13]
 
+dealerAbove21 = false;
+playerAbove21 = false;
 
 
 class Card{
@@ -18,7 +20,26 @@ class Card{
     }
 
     appendIt(destination) {
-        destination.appendChild(this.#element);
+        if (this.flipped == true) {
+            this.#element.src = this.image_path;
+            destination.appendChild(this.#element);
+        } else {
+            this.#element.src = "cards/back of card.png";
+            destination.appendChild(this.#element);
+        }
+        
+    }
+
+    setflip() {
+        if (this.flipped != true) {
+            this.#flipped = true
+        } else{
+            this.#flipped = false
+        }
+    }
+
+    get flipped() {
+        return this.#flipped;
     }
 
     get value(){
@@ -49,7 +70,19 @@ class Card{
     }
 }
 
-
+function above21() {
+    if (dealerTotal > 21) {
+        dealerAbove21 = true;
+        // document.getElementById("dealerTotal").innerText = dealerTotal;
+        window.alert("Dealer is above 21");
+    }
+    if (cardTotal > 21) {
+        playerAbove21 = true;
+        document.getElementById("cardTotal").innerText = cardTotal;
+        window.alert("Player is above 21");
+    }
+    return false;
+}
 
 
 let deck = [];
@@ -67,8 +100,20 @@ for(let card of deck){
 }
 
 
+function reflip(deck) {
+    for (let card of deck) {
+        if (card.flipped == true) {
+            card.setflip();
+        }
+    }
+}
 
-
+function dealToDealer(deck) {
+    if (i >= 1 ) {deck[i].setflip()}
+    deck[i].appendIt(document.getElementById("dealer-deck"))
+    dealerTotal += deck[i].value;
+    i += 1;
+}
 
 
 
@@ -79,7 +124,14 @@ function shuffle(deck) {
         let card2 = Math.floor(Math.random() * deck.length);
         [deck[card1], deck[card2]] = [deck[card2], deck[card1]]
     }
+    reflip(deck);
     return deck
+}
+
+function dealToPlayer(deck) {
+    deck[i].appendIt(document.getElementById("player-deck"))
+    cardTotal += deck[i].value;
+    i += 1;
 }
 
 // function replaceImages (deck, destination) {
@@ -91,32 +143,49 @@ function shuffle(deck) {
 
 let cardTotal = 0
 let dealerTotal = 0
+let i = 0
 
 //main Game Segment 
 
 document.getElementById("shuffle").addEventListener("click", () => {
     //dealing with the initiation of the game from shuffle
+
     cardTotal = 0;
     dealerTotal = 0;
-    let i = 0
+    i = 0;
     shuffle(deck);
-    document.getElementById("player-deck").replaceChildren();
-    for (i; i != 2; i += 1) {
-    if (i = 1) {
-        deck[i].appendIt(document.getElementById("player-deck"))
-    } else {
-        //need to finish this
-    }
     
-    cardTotal += deck[i].value;
-    }
-    for (i; i != 4; i += 1) {
-        deck[i].appendIt(document.getElementById("dealer-deck"))
-        dealerTotal += deck[i].value;
-    }
+    document.getElementById("player-deck").replaceChildren();
+    document.getElementById("dealer-deck").replaceChildren();
+    
+    dealToPlayer(deck);
+    dealToDealer(deck);
+
+    
+
     document.getElementById("dealerTotal").innerText = dealerTotal;
     document.getElementById("cardTotal").innerText = cardTotal;
  })
 
+
+document.getElementById("hit").addEventListener("click", () => {
+    dealToPlayer(deck);
+    document.getElementById("cardTotal").innerText = cardTotal;
+    above21();
+    
+})
+
+let dealerTurn = true;
+document.getElementById("stand").addEventListener("click", () => {
+    while (dealerTotal < 17) {
+        dealToDealer(deck);
+    }
+    document.getElementById("dealerTotal").innerText = dealerTotal;
+    dealerTurn = false;
+    
+    above21();
+    document.getElementById("dealerTotal").innerText = dealerTotal;
+    window.alert("Dealer is above 21");
+}) 
 
 
